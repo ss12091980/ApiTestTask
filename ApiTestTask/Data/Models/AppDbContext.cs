@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Auth.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Identity.Models
+namespace ApiTestTask.Data.Models
 {
     public class AppDbContext : DbContext
     {

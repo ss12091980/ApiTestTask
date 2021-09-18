@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Auth.Identity.Models
+namespace ApiTestTask.Identity.Models
 {
     public class Auth
     {

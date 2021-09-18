@@ -1,4 +1,3 @@
-using Auth.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApiEmpty.Identity;
+using ApiTestTask.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Auth.Identity.Models;
+using ApiTestTask.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ApiTestTask.Data.Models;
 
-namespace WebApiEmpty
+namespace ApiTestTask
 {
     public class Startup
     {
@@ -32,6 +32,7 @@ namespace WebApiEmpty
             services.AddControllers();
 
             services.Configure<AuthOptions>(Configuration.GetSection("Auth"));
+
             var authConfiguration = Configuration.GetSection("Auth").Get<AuthOptions>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

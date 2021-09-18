@@ -1,4 +1,4 @@
-using Auth.Data.Models;
+using ApiTestTask.Data.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApiEmpty
+namespace ApiTestTask
 {
     public class Program
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace Auth.Identity
+namespace ApiTestTask
 {
     public class AuthOptions
     {

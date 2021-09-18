@@ -5,15 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Auth.Identity.Models;
+using ApiTestTask.Identity.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using Auth.Identity;
-using Auth.Data.Models;
+using ApiTestTask.Identity;
+using ApiTestTask.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WebApiEmpty.Identity.Controllers
+namespace ApiTestTask.Identity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -58,7 +58,7 @@ namespace WebApiEmpty.Identity.Controllers
 
         [Route("login")]
         [HttpPost]
-        public IActionResult Login([FromBody] Auth.Identity.Models.Auth login)
+        public IActionResult Login([FromBody] ApiTestTask.Identity.Models.Auth login)
         {
             if (AuthenticateUser(login.Login, login.Password))
             {
@@ -96,7 +96,7 @@ namespace WebApiEmpty.Identity.Controllers
 
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, login),
+                new Claim(JwtRegisteredClaimNames.UniqueName, login),
                 new Claim(JwtRegisteredClaimNames.Sub, password)
             };
 
