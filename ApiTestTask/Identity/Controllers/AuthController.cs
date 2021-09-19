@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -12,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using ApiTestTask.Identity;
 using ApiTestTask.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+
 
 namespace ApiTestTask.Identity.Controllers
 {
@@ -30,15 +32,15 @@ namespace ApiTestTask.Identity.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public IActionResult Registration([FromBody] Registration registration)
+        public async Task<IActionResult> Registration([FromBody] Registration registration)
         {
             if (registration.Password != registration.PasswordConfirmation)
                 return BadRequest(new { errorText = "Password and PasswordConfirmation do not match" });
 
-            if (!ContainsLogin(registration.Login))
+            if (await ContainsLoginAsync(registration.Login) == false)
             {
-                AddNewAccount(registration);
-                if (AuthenticateUser(registration.Login, registration.Password))
+                await AddNewAccountAsync(registration);
+                if (await AuthenticateUserAsync(registration.Login, registration.Password))
                 {
                     var token = GenerateJWT(login: registration.Login, password: registration.Password);
                     return Ok(new { access_token = token });
@@ -50,17 +52,17 @@ namespace ApiTestTask.Identity.Controllers
                 return BadRequest(new { errorText = "Login used" });
         }
 
-        private void AddNewAccount(Registration registration)
+        private async Task AddNewAccountAsync(Registration registration)
         {
             context.Users.Add(new User(login: registration.Login, name:registration.Name, password:registration.Password));
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         [Route("login")]
         [HttpPost]
-        public IActionResult Login([FromBody] ApiTestTask.Identity.Models.Auth login)
+        public async Task<IActionResult> LoginAsync([FromBody] ApiTestTask.Identity.Models.Auth login)
         {
-            if (AuthenticateUser(login.Login, login.Password))
+            if (await AuthenticateUserAsync(login.Login, login.Password))
             {
                 var token = GenerateJWT(login: login.Login,password: login.Password);
                 return Ok(new { access_token = token });
@@ -72,19 +74,19 @@ namespace ApiTestTask.Identity.Controllers
         [Route("users")]
         [HttpGet]
         [Authorize]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsersAsync()
         {
-            return Ok(context.Users.Select(user => new { user.Login, user.Name }));
+            return Ok(await context.Users.Select(user => new { user.Login, user.Name }).ToListAsync());
         }
 
-        private bool AuthenticateUser(string login, string password)
+        private async Task<bool> AuthenticateUserAsync(string login, string password)
         {
-            return context.Users.AsQueryable().Count(user => user.Login == login && user.Password == password) == 1;
+            return await context.Users.AsQueryable().CountAsync(user => user.Login == login && user.Password == password) == 1;
         }
 
-        private bool ContainsLogin(string login)
+        private async Task<bool> ContainsLoginAsync(string login)
         {
-            return context.Users.AsQueryable().Count(user => user.Login == login) == 1;
+            return await context.Users.AsQueryable().CountAsync(user => user.Login == login) == 1;
         }
 
         private string GenerateJWT(string login, string password)
